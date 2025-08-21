@@ -1,6 +1,6 @@
 import app from "./app";
 import http from "http";
-import { appConfig } from "./config";
+import { appConfig } from "./config/config";
 import { connectToDB, disconnectFromDB } from "./db/connection";
 let server = http.createServer(app);
 

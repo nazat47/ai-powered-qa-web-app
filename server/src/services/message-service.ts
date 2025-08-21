@@ -1,4 +1,4 @@
-import { appConfig } from "../config";
+import { appConfig } from "../config/config";
 import { NotFoundError } from "../errors";
 import { Message, MessageDoc } from "../models/message";
 import {
@@ -6,6 +6,8 @@ import {
   createUserContent,
   createPartFromUri,
 } from "@google/genai";
+import { txtToPdf, docxToPdf } from "../utils/convert-to-pdf";
+import { MIMETYPES } from "../config/constants";
 
 const ai = new GoogleGenAI({
   apiKey: appConfig.geminiApiKey,
@@ -19,9 +21,16 @@ export const createMessageService = async (
   let uploadedFile = null;
 
   if (myFile && myFile.path) {
+    let filepath = myFile.path;
+    if (myFile?.mimetype === MIMETYPES.docx) {
+      filepath = await docxToPdf(filepath);
+    } else if (myFile?.mimetype === MIMETYPES.txt) {
+      filepath = await txtToPdf(filepath);
+    }
+
     uploadedFile = await ai.files.upload({
-      file: myFile!.path,
-      config: { mimeType: myFile!.mimetype },
+      file: filepath,
+      config: { mimeType: MIMETYPES.pdf },
     });
   }
 
@@ -32,7 +41,7 @@ export const createMessageService = async (
       myFile && {
         file: {
           uri: uploadedFile.uri,
-          mimeType: uploadedFile.mimeType,
+          mimeType: MIMETYPES.pdf,
           filename: myFile.filename,
         },
       }),

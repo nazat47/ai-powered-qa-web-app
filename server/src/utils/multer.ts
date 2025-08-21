@@ -4,15 +4,11 @@ import { BadRequestError } from "../errors";
 import { Request } from "express";
 import fs from "fs";
 import crypto from "crypto";
+import { MIMETYPES } from "../config/constants";
 
 const uploadConfigs = {
   maxFileSize: 1024 * 1024 * 50,
-  allowedTypes: [
-    "application/pdf",
-    "application/msword",
-    "text/plain",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  ],
+  allowedTypes: [MIMETYPES.pdf, MIMETYPES.txt, MIMETYPES.docx],
   allowedExtensions: [".pdf", ".docx", ".doc", ".txt"],
   uploadPath: path.join(__dirname, "../uploads"),
 };

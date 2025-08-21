@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { appConfig } from "../config";
+import { appConfig } from "../config/config";
 import { Response } from "express";
 import bcrypt from "bcryptjs";
 import { UserDoc } from "../models/user";
