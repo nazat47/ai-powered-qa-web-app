@@ -30,6 +30,7 @@ export const login = async (payload) => {
 export const logout = async () => {
   try {
     await Axios.post(`${apiUrl}/auth/logout`, {}, { withCredentials: true });
+    window.location.href = "/login";
   } catch (error) {
     console.log(error);
   }

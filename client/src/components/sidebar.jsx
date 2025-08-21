@@ -1,10 +1,12 @@
-import { getMessages, getUserConversations } from "@/services/api";
+import { getMessages, getUserConversations, logout } from "@/services/api";
 import { useConversationStore } from "@/store/conversation-store";
+import { useUserStore } from "@/store/user-store";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import React from "react";
 
 const Sidebar = ({ sidebarOpen, selectedChat, setSelectedChat }) => {
+  const { user, clearUser } = useUserStore();
   const { setMessages } = useConversationStore();
   const { clearMessages } = useConversationStore();
   const { data, isLoading } = useQuery({
@@ -22,6 +24,11 @@ const Sidebar = ({ sidebarOpen, selectedChat, setSelectedChat }) => {
   const handleConversationClick = (conv) => {
     setSelectedChat(conv);
     mutate(conv?._id);
+  };
+
+  const handleLogout = () => {
+    clearUser();
+    logout();
   };
 
   return (
@@ -59,6 +66,17 @@ const Sidebar = ({ sidebarOpen, selectedChat, setSelectedChat }) => {
             </div>
           </button>
         ))}
+      </div>
+      <div className="py-4 flex flex-col gap-4 items-center justify-center">
+        <div className="flex items-center gap-2">
+          <p className="shrink-0 size-8 p-2 rounded-full bg-blue-600 flex items-center justify-center text-white">
+            {user?.name.charAt(0)}
+          </p>
+          <p>{user?.name}</p>
+        </div>
+        <button className="text-red-600" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
     </div>
   );
